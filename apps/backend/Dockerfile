@@ -3,7 +3,6 @@ FROM node:23-alpine AS builder
 
 WORKDIR /app
 
-
 # Copiar os arquivos do projeto
 COPY package*.json ./
 COPY prisma ./prisma
@@ -30,7 +29,10 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
 
+# Instalar dependências de produção no ambiente final
+RUN npm install --production
+
 # Definir variável de ambiente (ajuste conforme sua aplicação)
 ENV NODE_ENV=production
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/server.js"]
