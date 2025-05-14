@@ -24,7 +24,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: chatapp
+      POSTGRES_DB: realtime-chat
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
