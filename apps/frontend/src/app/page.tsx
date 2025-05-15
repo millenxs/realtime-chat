@@ -31,7 +31,7 @@ const features = [
   },
 ];
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
+export default function AuthLayout() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-white py-24 sm:py-32">
       {/* Botões fixos no canto superior direito */}
