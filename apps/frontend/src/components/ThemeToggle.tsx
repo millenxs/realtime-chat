@@ -1,16 +1,22 @@
 'use client';
 
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { ReactNode } from 'react';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import { Sun, Moon } from 'lucide-react';
 
-interface Props {
-  children: ReactNode;
-}
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-export function ThemeProvider({ children }: Props) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
-    <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-      {children}
-    </NextThemesProvider>
+    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+      {theme === 'dark' ? <Sun /> : <Moon />}
+    </button>
   );
 }

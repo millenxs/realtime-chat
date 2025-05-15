@@ -1,40 +1,77 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { ThemeProvider } from '../ThemeToggle';
-import { LocaleProvider } from '../LocaleSwitcher';
+import "../../styles/globals.css";
+import { ReactNode } from "react";
+import Link from "next/link";
 
 interface AuthCardProps {
+  title?: string;
+  subtitle?: string;
+  linkLabel?: string;
+  linkHref?: string;
+  linkText?: string;
+  variant?: 'login' | 'register';
   children: ReactNode;
-  variant: 'login' | 'register';
+  animationDirection?: "left" | "right";
+  onToggle?: () => void;
 }
 
-export function AuthCard({ children, variant }: AuthCardProps) {
-  return (
-    <ThemeProvider>
-      <LocaleProvider>
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="max-w-4xl w-full flex flex-col md:flex-row items-center justify-center gap-10 p-6">
-            {/* Lado da animação do Rive */}
-            <div className="w-full md:w-1/2">
-              <div className="w-full h-[300px] bg-muted rounded-xl flex items-center justify-center">
-                <p className="text-muted-foreground">Rive Animation Aqui</p>
-              </div>
-            </div>
+export function AuthCard({
+  title,
+  subtitle,
+  linkLabel,
+  linkHref,
+  linkText,
+  variant = 'login',
+  children,
+  animationDirection = 'left',
+  onToggle,
+}: AuthCardProps) {
+  const animationClass =
+    animationDirection === "left" ? "slideInFromLeft" : "slideInFromRight";
 
-            {/* Card de login/cadastro */}
-            <div className="w-full md:w-1/2">
-              <Card className="p-4 shadow-xl">
-                <CardContent>
-                  <h1 className="text-2xl font-bold capitalize mb-4">{variant}</h1>
-                  {children}
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </LocaleProvider>
-    </ThemeProvider>
+  const defaultConfig = variant === 'login'
+    ? {
+        title: 'Welcome',
+        subtitle: 'Sign in to your account',
+        linkLabel: "Don't have an account?",
+        linkText: 'Sign up',
+        linkHref: '/register',
+      }
+    : {
+        title: 'Join us',
+        subtitle: 'Create your account',
+        linkLabel: 'Already have an account?',
+        linkText: 'Sign in',
+        linkHref: '/',
+      };
+
+  const finalTitle = title ?? defaultConfig.title;
+  const finalSubtitle = subtitle ?? defaultConfig.subtitle;
+  const finalLinkLabel = linkLabel ?? defaultConfig.linkLabel;
+  const finalLinkText = linkText ?? defaultConfig.linkText;
+  const finalLinkHref = linkHref ?? defaultConfig.linkHref;
+
+  return (
+    <div
+      style={{ animation: `${animationClass} 1s ease-out` }}
+      className="max-w-md w-full bg-gradient-to-r from-blue-800 to-purple-600 rounded-xl shadow-2xl overflow-hidden p-8 space-y-8"
+    >
+      <h2 style={{ animation: 'appear 2s ease-out' }} className="text-center text-4xl font-extrabold text-white">
+        {finalTitle}
+      </h2>
+      <p style={{ animation: 'appear 3s ease-out' }} className="text-center text-gray-200">
+        {finalSubtitle}
+      </p>
+
+      {children}
+
+      <div className="text-center text-gray-300">
+        {finalLinkLabel}{' '}
+        <Link className="text-purple-300 hover:underline" href={finalLinkHref}>
+          {finalLinkText}
+        </Link>
+      </div>
+    </div>
   );
 }

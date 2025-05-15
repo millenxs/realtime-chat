@@ -1,22 +1,23 @@
-import './globals.css';
+import '../styles/globals.css';
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/components/ThemeToggle';
-import { LocaleProvider } from '@/components/LocaleSwitcher';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Auth App',
-  description: 'Login/Register system with Next.js',
+  title: 'Realtime Chat',
+  description: 'Login/Register',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt" suppressHydrationWarning>
       <body className={inter.className}>
-        <LocaleProvider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </LocaleProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
