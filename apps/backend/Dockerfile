@@ -33,6 +33,6 @@ COPY --from=builder /app/prisma ./prisma
 RUN npm install --production
 
 # Definir variável de ambiente (ajuste conforme sua aplicação)
-ENV NODE_ENV=production
+RUN npm install --omit=dev
 
 CMD ["node", "dist/server.js"]
