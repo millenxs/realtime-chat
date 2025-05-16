@@ -32,14 +32,17 @@
       "socket.io-client": "^4.8.1",
       "tailwind-merge": "^3.3.0",
       "tailwind-variants": "^1.0.0",
+      "tw-colors": "^3.3.2",
       "typescript": "^5.8.3",
       "zod": "^3.24.4"
    },
    "devDependencies": {
       "@tailwindcss/postcss": "^4.1.6",
+      "@types/axios": "^0.9.36",
       "@types/jwt-decode": "^2.2.1",
       "@types/node": "^22.15.17",
       "@types/react": "^19.1.4",
+      "@types/socket.io-client": "^1.4.36",
       "autoprefixer": "^10.4.21",
       "postcss": "^8.5.3",
       "tailwindcss": "^4.1.6",
