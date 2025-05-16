@@ -33,6 +33,10 @@ COPY --from=builder /app/prisma ./prisma
 RUN npm install --production
 
 # Definir variável de ambiente (ajuste conforme sua aplicação)
+<<<<<<< HEAD
 ENV NODE_ENV=production
+=======
+RUN npm install --omit=dev
+>>>>>>> origin/login-register-authentication
 
 CMD ["node", "dist/server.js"]
