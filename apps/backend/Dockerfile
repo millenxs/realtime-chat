@@ -9,7 +9,7 @@ COPY prisma ./prisma
 COPY tsconfig.json ./
 COPY src ./src
 
-# Instalar dependências
+# Instalar dependências (todas, incluindo dev)
 RUN npm install
 
 # Gerar Prisma Client
@@ -23,20 +23,14 @@ FROM node:23-alpine
 
 WORKDIR /app
 
-# Copiar apenas arquivos necessários da etapa de build
+# Copiar apenas os arquivos necessários da etapa de build
+COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
 
-# Instalar dependências de produção no ambiente final
-RUN npm install --production
-
-# Definir variável de ambiente (ajuste conforme sua aplicação)
-<<<<<<< HEAD
-ENV NODE_ENV=production
-=======
+# Instalar apenas dependências de produção
 RUN npm install --omit=dev
->>>>>>> origin/login-register-authentication
 
+# Definir comando padrão
 CMD ["node", "dist/server.js"]
