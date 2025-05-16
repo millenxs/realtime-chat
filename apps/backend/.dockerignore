@@ -4,3 +4,5 @@ npm-debug.log
 Dockerfile
 .dockerignore
 .env
+@prisma/client/
+.prisma/

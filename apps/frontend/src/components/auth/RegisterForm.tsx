@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -14,6 +15,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
   const [apiError, setApiError] = useState<string | null>(null);
+  const router = useRouter();
 
   const {
     register: registerInput,
@@ -29,7 +31,7 @@ export function RegisterForm() {
       await register(data);
       toast.success("Cadastro realizado com sucesso! Faça login.");
       setTimeout(() => {
-        window.location.href = "/login";
+        router.push("/login");
       }, 1500);
     } catch (error: any) {
       const message =
