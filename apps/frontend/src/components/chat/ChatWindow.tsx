@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { io, Socket } from "socket.io-client";
+import io  from "socket.io-client";
+import type { Socket } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { v4 as uuidv4 } from "uuid";
+import api from "@/services/api";
 
 interface Message {
   id: string;
@@ -24,28 +26,25 @@ export default function ChatWindow() {
   ]);
   const [input, setInput] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
-  const socketRef = useRef<Socket | null>(null);
+  const socketRef = useRef<typeof Socket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      console.error("Token não encontrado");
+      alert("Você precisa estar logado para usar o chat.");
       return;
     }
 
     const decoded = jwtDecode<DecodedToken>(token);
     setUserId(decoded.id);
 
-    // 👉 Buscar mensagens salvas usando axios
     const fetchMessages = async () => {
       try {
-        const response = await axios.get("http://localhost:3333/messages", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await api.get<
+          { id: string; content: string; senderId: string }[]
+        >("/messages");
 
         const loadedMessages: Message[] = response.data.map(
           (msg: { id: string; content: string; senderId: string }) => ({
@@ -64,16 +63,18 @@ export default function ChatWindow() {
 
     fetchMessages();
 
-    // 👉 Conectar ao WebSocket
-    socketRef.current = io("http://localhost:3333", {
+    // Conexão WebSocket
+    const socket = io("http://localhost:3333", {
       auth: { token },
     });
 
-    socketRef.current.on("connect", () => {
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
       console.log("Conectado ao WebSocket");
     });
 
-    socketRef.current.on(
+    socket.on(
       "message",
       (msg: { id: string; text: string; senderId: string }) => {
         const isFromUser = msg.senderId === decoded.id;
@@ -84,37 +85,41 @@ export default function ChatWindow() {
             id: msg.id,
             text: msg.text,
             fromUser: isFromUser,
+            senderId: msg.senderId,
           },
         ]);
       }
     );
 
-    socketRef.current.on("disconnect", () => {
+    socket.on("disconnect", () => {
       console.log("Desconectado do WebSocket");
     });
 
-    socketRef.current.on("connect_error", (err) => {
+    socket.on("connect_error", (err) => {
       console.error("Erro na conexão do WebSocket:", err.message);
     });
 
     return () => {
-      socketRef.current?.disconnect();
+      socket.disconnect();
     };
   }, []);
 
   function sendMessage() {
-    if (!input.trim()) return;
+    if (!input.trim() || !userId) return;
 
-    const newMessage: Message = {
-      id: String(Date.now()),
+    const messageToSend: Message = {
+      id: uuidv4(),
       text: input.trim(),
       fromUser: true,
+      senderId: userId,
     };
 
-    setMessages((msgs) => [...msgs, newMessage]);
+    socketRef.current?.emit("message", messageToSend);
 
     socketRef.current?.emit("message", {
-      text: input.trim(),
+      id: messageToSend.id,
+      text: messageToSend.text,
+      senderId: userId,
     });
 
     setInput("");
@@ -153,7 +158,7 @@ export default function ChatWindow() {
           onChange={(e) => setInput(e.target.value)}
           className="flex-1"
         />
-        <Button type="submit">Enviar</Button>
+        <Button type="submit" disabled={!input.trim()}>Enviar</Button>
       </form>
     </div>
   );

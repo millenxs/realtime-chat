@@ -1,6 +1,14 @@
 import api from './api';
 import { z } from 'zod';
 
+export interface LoginResponse {
+  token: string;
+  user: {
+    id: number;
+    email: string;
+  };
+}
+
 export const registerSchema = z
   .object({
     name: z.string().min(1, "Nome é obrigatório"),
@@ -37,8 +45,7 @@ export const register = async (data: {
 export const login = async (data: {
   email: string;
   password: string;
-}) => {
+}): Promise<{ data: LoginResponse }> => {
   loginSchema.parse(data);
-
-  return api.post('/auth/login', data);
+  return api.post("/auth/login", data);
 };
