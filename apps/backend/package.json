@@ -15,11 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-<<<<<<< HEAD
-    "@prisma/client": "^6.7.0",
-=======
-    "@prisma/client": "^6.8.0",
->>>>>>> origin/login-register-authentication
+    "@prisma/client": "^6.8.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
@@ -33,11 +29,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.17",
     "@types/socket.io": "^3.0.1",
-<<<<<<< HEAD
-    "prisma": "^6.7.0",
-=======
     "prisma": "^6.8.0",
->>>>>>> origin/login-register-authentication
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }

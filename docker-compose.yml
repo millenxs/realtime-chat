@@ -6,14 +6,17 @@ services:
       - "3333:3333"
     volumes:
       - ./apps/backend:/app
+      - /app/node_modules
     depends_on:
       - postgres
       - redis
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/realtime-chat
       - REDIS_URL=redis://redis:6379
+      - CORS_ORIGIN=http://frontend:3000
     networks:
       - chatnet
+    command: npm run dev
 
   postgres:
     image: postgres:16
@@ -55,11 +58,14 @@ services:
     container_name: frontend
     build: ./apps/frontend
     ports:
-      - "3000:3000" # porta padrão do Next.js
-    # volumes:
-#   - ./apps/frontend:/app
+      - "3000:3000"
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://backend:3333
+      - CORS_ORIGIN=http://frontend:3000
     depends_on:
       - backend
     networks:

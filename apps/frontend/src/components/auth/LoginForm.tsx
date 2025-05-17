@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +14,7 @@ import { loginSchema, login } from "@/services/auth";
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
+  const router = useRouter();
   const [apiError, setApiError] = useState<string | null>(null);
 
   const {
@@ -30,7 +32,7 @@ export function LoginForm() {
       localStorage.setItem("token", response.data.token);
       toast.success("Login realizado com sucesso!");
       setTimeout(() => {
-        window.location.href = "/home";
+        router.push("/home");
       }, 1500);
     } catch (error: any) {
       const message = error.response?.data?.message || "Erro no login";
