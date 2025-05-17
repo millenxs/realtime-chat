@@ -12,10 +12,6 @@ if (!SECRET) {
 
 const secret = SECRET;
 
-interface TokenPayload extends JwtPayload {
-  id: number;
-}
-
 export function verifyToken(req: Request, res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;
 
@@ -30,10 +26,10 @@ export function verifyToken(req: Request, res: Response, next: NextFunction): vo
     const decoded = jwt.verify(token, secret);
 
     // Verificação segura do tipo
-    if (typeof decoded === 'object' && decoded !== null && 'id' in decoded) {
-      req.user = { id: (decoded as TokenPayload).id };
-      next();
-    } else {
+    if (typeof decoded === 'object' && decoded !== null && 'userId' in decoded) {
+  req.user = { id: (decoded as any).userId };
+  next();
+} else {
       res.status(403).json({ error: 'Token malformado ou inválido.' });
     }
   } catch (err) {

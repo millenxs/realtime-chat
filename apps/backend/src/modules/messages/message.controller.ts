@@ -9,7 +9,7 @@ export async function getMessagesController(req: Request, res: Response): Promis
     }
 
     const messages = await getUserMessages(String(req.user.id));
-    res.json(messages); // ✅ só envia, não retorna
+    res.json(messages); 
   } catch (err) {
     console.error("Erro ao buscar mensagens:", err);
     res.status(500).json({ error: "Erro interno no servidor." });
@@ -23,14 +23,21 @@ export async function postMessageController(req: Request, res: Response): Promis
       return;
     }
 
-    const { content } = req.body;
+    const { content, recipientId, conversationId } = req.body;
+
+    if (!recipientId || !conversationId) {
+      res.status(400).json({ error: "recipientId e conversationId são obrigatórios." });
+      return;
+    }
 
     const message = await saveMessage({
       content,
       senderId: String(req.user.id),
+      recipientId,
+      conversationId,
     });
 
-    res.status(201).json(message); // ✅ só envia, não retorna
+    res.status(201).json(message);
   } catch (err) {
     console.error("Erro ao salvar mensagem:", err);
     res.status(500).json({ error: "Erro ao salvar mensagem." });
