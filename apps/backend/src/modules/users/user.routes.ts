@@ -4,6 +4,7 @@ import { getAllUsers } from "./user.controller";
 
 const router = Router();
 
+// GET / - protected route to get all users
 router.get("/", verifyToken, getAllUsers); 
 
 export default router;
