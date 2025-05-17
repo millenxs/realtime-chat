@@ -1,29 +1,29 @@
-# Etapa 1: build da aplicação
+# Step 1: Build the application
 FROM node:23-alpine AS builder
 
 WORKDIR /app
 
-# Copiar os arquivos do projeto
+# Copy project files
 COPY package*.json ./
 COPY prisma ./prisma
 COPY tsconfig.json ./
 COPY src ./src
 
-# Instalar dependências (dev e prod)
+# Install dependencies (dev and prod)
 RUN npm install
 
-# Gerar Prisma Client
+# Generate Prisma Client
 RUN npx prisma generate
 
-# Compilar TypeScript (gerar código js na pasta dist)
+# Compile TypeScript (output JS code to the dist folder)
 RUN npm run build
 
-# Etapa 2: imagem final mais leve
+# Step 2: Final lightweight image
 FROM node:23-alpine
 
 WORKDIR /app
 
-# Copiar arquivos necessários do builder
+# Copy necessary files from the builder stage
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
@@ -31,5 +31,5 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/tsconfig.json ./
 
-# Comando para rodar o backend em modo desenvolvimento
+# Command to run the backend in development mode
 CMD ["npm", "run", "dev"]

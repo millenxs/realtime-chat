@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+export const userRoutes = []
+=======
 import { Router } from 'express';
 import { verifyToken } from '../../middlewares/authMiddleware';
 
@@ -8,3 +11,4 @@ router.get('/home', verifyToken, (req, res) => {
 });
 
 export default router;
+>>>>>>> origin/login-register-authentication
