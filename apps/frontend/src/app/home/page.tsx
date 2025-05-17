@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import Navbar from "@/components/navbar/Navbar";
-import Sidebar from "@/components/sidebar/Sidebar";
 import ChatWindow from "@/components/chat/ChatWindow";
 
 export default function HomePage() {
@@ -30,9 +29,6 @@ export default function HomePage() {
         <Navbar />
       </header>
       <main className="flex flex-1 overflow-hidden">
-        <aside className="w-72 bg-gray-900 text-white border-r border-gray-700 overflow-y-auto">
-          <Sidebar />
-        </aside>
         <section className="flex-1 bg-gray-800 text-white flex flex-col">
           <ChatWindow />
         </section>

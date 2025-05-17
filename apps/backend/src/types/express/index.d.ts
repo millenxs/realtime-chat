@@ -1,9 +1,17 @@
-import 'express';
+import express from 'express';
 
-declare module 'express' {
-  export interface Request {
-    user?: {
-      id: number | string;
-    };
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+      };
+    }
   }
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email?: string; 
 }

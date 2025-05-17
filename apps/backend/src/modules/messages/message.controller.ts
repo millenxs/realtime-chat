@@ -3,36 +3,48 @@ import { getUserMessages, saveMessage } from "./message.service";
 
 export async function getMessagesController(req: Request, res: Response): Promise<void> {
   try {
+    // Check if user is authenticated
     if (!req.user?.id) {
-      res.status(401).json({ error: "Usuário não autenticado." });
+      res.status(401).json({ error: "User not authenticated." });
       return;
     }
 
+    // Retrieve messages for the authenticated user
     const messages = await getUserMessages(String(req.user.id));
-    res.json(messages); // ✅ só envia, não retorna
+    res.json(messages);
   } catch (err) {
-    console.error("Erro ao buscar mensagens:", err);
-    res.status(500).json({ error: "Erro interno no servidor." });
+    console.error("Error fetching messages:", err);
+    res.status(500).json({ error: "Internal server error." });
   }
 }
 
 export async function postMessageController(req: Request, res: Response): Promise<void> {
   try {
+    // Check if user is authenticated
     if (!req.user?.id) {
-      res.status(401).json({ error: "Usuário não autenticado." });
+      res.status(401).json({ error: "User not authenticated." });
       return;
     }
 
-    const { content } = req.body;
+    const { content, recipientId, conversationId } = req.body;
 
+    // Validate required fields
+    if (!recipientId || !conversationId) {
+      res.status(400).json({ error: "recipientId and conversationId are required." });
+      return;
+    }
+
+    // Save the new message
     const message = await saveMessage({
       content,
       senderId: String(req.user.id),
+      recipientId,
+      conversationId,
     });
 
-    res.status(201).json(message); // ✅ só envia, não retorna
+    res.status(201).json(message);
   } catch (err) {
-    console.error("Erro ao salvar mensagem:", err);
-    res.status(500).json({ error: "Erro ao salvar mensagem." });
+    console.error("Error saving message:", err);
+    res.status(500).json({ error: "Error saving message." });
   }
 }

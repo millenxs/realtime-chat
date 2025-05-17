@@ -8,18 +8,50 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  password  String
-  createdAt DateTime @default(now())
-  messages  Message[]
+  id          String        @id @default(uuid())
+  email       String        @unique
+  name        String?
+  password    String
+  createdAt   DateTime      @default(now())
+  messages    Message[]     @relation("SentMessages")
+  received    Message[]     @relation("MessageRecipient")
+  Participant Participant[]
+}
+
+model Conversation {
+  id           String        @id @default(uuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  participants Participant[]
+  messages     Message[]
+
+  lastMessageId String?  @unique
+  lastMessage   Message? @relation("LastMessage", fields: [lastMessageId], references: [id])
+}
+
+model Participant {
+  id             String       @id @default(uuid())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+
+  @@unique([userId, conversationId]) // evita duplicidade de participante na mesma conversa
 }
 
 model Message {
   id        String   @id @default(uuid())
   content   String
   createdAt DateTime @default(now())
-  sender    User     @relation(fields: [senderId], references: [id])
-  senderId  String
+
+  sender   User   @relation("SentMessages", fields: [senderId], references: [id])
+  senderId String
+
+  recipient   User?   @relation("MessageRecipient", fields: [recipientId], references: [id])
+  recipientId String?
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+
+  lastMessageOf Conversation? @relation("LastMessage")
 }

@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import routes from './routes';
 import { setupWebSocket } from './config/websocket';
 import http from 'http';
-import messageRoutes from "./modules/messages/message.routes";
 import cors from "cors";
 
 dotenv.config();
@@ -21,13 +20,13 @@ app.use(
         callback(new Error(`CORS: Origin ${origin} not allowed`));
       }
     },
-    credentials: true, // se estiver usando cookies
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'], 
   })
 );
 
 app.use(express.json());
 app.use(routes);
-app.use("/messages", messageRoutes);
 
 const server = http.createServer(app);
 
