@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { saveMessage } from "../modules/messages/message.service";
 import { prisma } from "../config/database";
 
-// Map para guardar a relação userId <-> socket.id
+// Map to store the relation userId <-> socket.id
 const onlineUsers = new Map<string, string>();
 
 export const setupWebSocket = (server: any) => {
@@ -15,7 +15,7 @@ export const setupWebSocket = (server: any) => {
     },
   });
 
-  // Middleware de autenticação JWT no handshake do socket
+  // JWT authentication middleware on socket handshake
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
     try {
@@ -27,9 +27,9 @@ export const setupWebSocket = (server: any) => {
     }
   });
 
-  // Função para buscar ou criar conversa entre dois usuários
+  // Function to find or create a conversation between two users
   const getOrCreateConversation = async (userId1: string, userId2: string) => {
-    // Primeiro busca todas as conversas que userId1 participa
+    // First, fetch all conversations where userId1 is a participant
     const conversations = await prisma.conversation.findMany({
       where: {
         participants: {
@@ -43,7 +43,7 @@ export const setupWebSocket = (server: any) => {
       },
     });
 
-    // Filtra para encontrar conversa que tenha exatamente os dois usuários como participantes
+    // Filter to find conversation that has exactly these two users as participants
     for (const conversation of conversations) {
       const participantUserIds = conversation.participants.map((p: { userId: string }) => p.userId);
       if (
@@ -55,7 +55,7 @@ export const setupWebSocket = (server: any) => {
       }
     }
 
-    // Se não encontrou conversa existente, cria uma nova com os dois participantes
+    // If no existing conversation found, create a new one with both participants
     const newConversation = await prisma.conversation.create({
       data: {
         participants: {
@@ -89,10 +89,10 @@ export const setupWebSocket = (server: any) => {
           return;
         }
 
-        // Obtém ou cria a conversa
+        // Get or create the conversation
         const conversation = await getOrCreateConversation(senderId, recipientId);
 
-        // Salva a mensagem, incluindo conversationId
+        // Save the message including conversationId
         const savedMessage = await saveMessage({
           content,
           senderId,
@@ -100,7 +100,7 @@ export const setupWebSocket = (server: any) => {
           conversationId: conversation.id,
         });
 
-        // Emite para remetente
+        // Emit message to sender
         socket.emit('message', {
           id: savedMessage.id,
           text: savedMessage.content,
@@ -110,7 +110,7 @@ export const setupWebSocket = (server: any) => {
           recipientId,
         });
 
-        // Envia para destinatário, se online
+        // Send message to recipient if online
         const recipientSocketId = onlineUsers.get(recipientId);
         if (recipientSocketId) {
           io.to(recipientSocketId).emit('message', {
@@ -123,7 +123,7 @@ export const setupWebSocket = (server: any) => {
           });
         }
       } catch (error) {
-        console.error("Erro ao processar mensagem:", error);
+        console.error("Error processing message:", error);
       }
     });
 

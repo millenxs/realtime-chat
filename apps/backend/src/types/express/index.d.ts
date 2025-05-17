@@ -13,5 +13,5 @@ declare global {
 export interface User {
   id: string;
   name: string;
-  email?: string; // ou qualquer outro campo que você tiver
+  email?: string; 
 }
