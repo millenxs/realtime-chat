@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import React, { useState, useEffect } from "react";
 import { useChat } from "@/context/ChatContext";
@@ -21,7 +21,7 @@ export default function ConversationList() {
   const [conversationSearchTerm, setConversationSearchTerm] = useState("");
   const [filteredConversations, setFilteredConversations] = useState(conversations);
 
-  // Filtrar conversas quando a lista de conversas ou o termo de busca mudar
+  // Filter conversations when the list or the search term changes
   useEffect(() => {
     if (!conversationSearchTerm) {
       setFilteredConversations(conversations);
@@ -30,7 +30,7 @@ export default function ConversationList() {
 
     const filtered = conversations.filter(conv => {
       const otherUser = conv.participants.find(p => p.userId !== userId)?.user;
-      const otherUserName = otherUser?.name || "Desconhecido";
+      const otherUserName = otherUser?.name || "Unknown";
       return otherUserName.toLowerCase().includes(conversationSearchTerm.toLowerCase());
     });
     
@@ -51,7 +51,7 @@ export default function ConversationList() {
   return (
     <div className="w-64 border-r border-gray-700 p-4 flex flex-col h-full">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">Conversas</h2>
+        <h2 className="text-lg font-bold">Conversations</h2>
         <Dialog open={isNewConversationOpen} onOpenChange={setIsNewConversationOpen}>
           <DialogTrigger asChild>
             <Button 
@@ -65,18 +65,18 @@ export default function ConversationList() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Nova Conversa</DialogTitle>
+              <DialogTitle>New Conversation</DialogTitle>
             </DialogHeader>
             <div className="py-4">
               <Input
-                placeholder="Buscar usuário..."
+                placeholder="Search user..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="mb-4"
               />
               
               {isLoading ? (
-                <div className="text-center py-4">Carregando...</div>
+                <div className="text-center py-4">Loading...</div>
               ) : (
                 <div className="max-h-60 overflow-y-auto">
                   {users.map(user => (
@@ -91,7 +91,7 @@ export default function ConversationList() {
                   
                   {!isLoading && users.length === 0 && (
                     <div className="text-center text-gray-400 py-2">
-                      Nenhum usuário encontrado
+                      No users found
                     </div>
                   )}
                 </div>
@@ -101,10 +101,10 @@ export default function ConversationList() {
         </Dialog>
       </div>
       
-      {/* Campo de busca para conversas existentes */}
+      {/* Search field for existing conversations */}
       <div className="relative mb-4">
         <Input
-          placeholder="Buscar conversas..."
+          placeholder="Search conversations..."
           value={conversationSearchTerm}
           onChange={(e) => setConversationSearchTerm(e.target.value)}
           className="pl-8 w-full"
@@ -124,15 +124,15 @@ export default function ConversationList() {
                   selectedConversation?.id === conv.id ? "bg-gray-700" : ""
                 }`}
               >
-                {otherUser?.name || "Desconhecido"}
+                {otherUser?.name || "Unknown"}
               </div>
             );
           })
         ) : (
           <div className="text-gray-400 text-center py-2">
             {conversations.length === 0 
-              ? "Nenhuma conversa encontrada." 
-              : "Nenhuma conversa corresponde à busca."}
+              ? "No conversations found." 
+              : "No conversations match your search."}
           </div>
         )}
       </div>

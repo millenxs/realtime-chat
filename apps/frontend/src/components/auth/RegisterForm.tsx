@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,7 @@ export function RegisterForm() {
   const router = useRouter();
 
   const {
-    register: registerInput,
+    register: registerInput, // `register` renamed to `registerInput` to avoid conflict with imported `register` function
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
@@ -28,14 +28,16 @@ export function RegisterForm() {
   async function onSubmit(data: RegisterFormData) {
     setApiError(null);
     try {
-      await register(data);
-      toast.success("Cadastro realizado com sucesso! Faça login.");
+      const { name, email, password, confirmPassword } = data;
+      await register({ name, email, password, confirmPassword });
+
+      toast.success("Registration successful! You can now log in.");
       setTimeout(() => {
         router.push("/login");
       }, 1500);
     } catch (error: any) {
       const message =
-        error.response?.data?.message || error.message || "Erro no cadastro";
+        error.response?.data?.message || error.message || "Registration failed.";
       setApiError(message);
       toast.error(message);
     }
@@ -114,7 +116,9 @@ export function RegisterForm() {
           type="password"
           id="confirmPassword"
           aria-invalid={errors.confirmPassword ? "true" : "false"}
-          aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
+          aria-describedby={
+            errors.confirmPassword ? "confirmPassword-error" : undefined
+          }
         />
         {errors.confirmPassword && (
           <p
@@ -138,7 +142,7 @@ export function RegisterForm() {
         type="submit"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Cadastrando..." : "Sign Up"}
+        {isSubmitting ? "Registering..." : "Sign Up"}
       </Button>
     </form>
   );

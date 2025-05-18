@@ -12,44 +12,88 @@ export async function getUserConversations(userId: string) {
     },
     include: {
       participants: {
-        select: {
-          userId: true,
+        include: {
           user: {
             select: {
+              id: true,
               name: true,
-              email: true,
-              // outros campos do usuário que quiser expor
-            },
-          },
-        },
+              email: true
+            }
+          }
+        }
       },
-      lastMessage: true, // se você tiver campo lastMessage para mostrar um resumo
+      lastMessage: true
     },
     orderBy: {
-      updatedAt: 'desc', // ordem das conversas pela última atualização
+      updatedAt: 'desc', 
     },
   });
 }
 
 export async function createConversation(userId: string, recipientId: string) {
-  // Verifica se já existe conversa entre os dois
+  // Validações básicas
+  if (!userId || !recipientId) {
+    throw new Error('IDs de usuário inválidos');
+  }
+
+  if (userId === recipientId) {
+    throw new Error('Não é possível criar uma conversa consigo mesmo');
+  }
+
+  // Verifica se ambos os usuários existem
+  const users = await prisma.user.findMany({
+    where: {
+      id: {
+        in: [userId, recipientId]
+      }
+    }
+  });
+
+  if (users.length !== 2) {
+    throw new Error('Um ou ambos os usuários não existem');
+  }
+
+  // Verifica se já existe uma conversa entre esses usuários
   const existingConversation = await prisma.conversation.findFirst({
     where: {
       AND: [
         {
           participants: {
-            some: { userId: userId },
-          },
+            some: {
+              userId: userId
+            }
+          }
         },
         {
           participants: {
-            some: { userId: recipientId },
-          },
-        },
+            some: {
+              userId: recipientId
+            }
+          }
+        }
       ],
+      // Garantir que a conversa tem EXATAMENTE esses dois participantes e nenhum outro
+      participants: {
+        every: {
+          userId: {
+            in: [userId, recipientId]
+          }
+        }
+      }
     },
     include: {
-      participants: true,
+      participants: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        }
+      },
+      lastMessage: true
     },
   });
 
@@ -57,20 +101,36 @@ export async function createConversation(userId: string, recipientId: string) {
     return existingConversation;
   }
 
-  // Cria nova conversa com dois participantes
-const newConversation = await prisma.conversation.create({
-    data: {
-      participants: {
-        create: [
-          { user: { connect: { id: userId } } },
-          { user: { connect: { id: recipientId } } },
-        ],
+  // Cria uma nova conversa entre os usuários
+  try {
+    const newConversation = await prisma.conversation.create({
+      data: {
+        participants: {
+          create: [
+            { userId: userId },
+            { userId: recipientId }
+          ]
+        }
       },
-    },
-    include: {
-      participants: true,
-    },
-  });
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          }
+        },
+        lastMessage: true
+      }
+    });
 
-  return newConversation;
+    return newConversation;
+  } catch (error) {
+    console.error('Erro ao criar conversa:', error);
+    throw new Error('Não foi possível criar a conversa');
+  }
 }

@@ -7,19 +7,21 @@ export default function MessageList() {
   const { messages, selectedConversation } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to the bottom when messages change
+  // Automatically scroll to the bottom whenever new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // If no conversation is selected, show a prompt to the user
   if (!selectedConversation) {
     return (
       <div className="flex items-center justify-center h-full text-gray-400">
-        Selecione uma conversa para começar.
+        Select a conversation to start chatting.
       </div>
     );
   }
 
+  // Identify the recipient (the other participant in the chat)
   const recipient = selectedConversation.participants.find(
     (p) => p.userId !== useChat().userId
   )?.user;
@@ -40,10 +42,11 @@ export default function MessageList() {
       ) : (
         <div className="text-center text-gray-400 my-4">
           {recipient?.name
-            ? `Esta é uma nova conversa com ${recipient.name}. Diga olá!`
-            : "Nenhuma mensagem encontrada. Comece a conversar!"}
+            ? `This is a new conversation with ${recipient.name}. Say hi!`
+            : "No messages found. Start a conversation!"}
         </div>
       )}
+      {/* Reference point to scroll into view when new messages arrive */}
       <div ref={messagesEndRef} />
     </div>
   );

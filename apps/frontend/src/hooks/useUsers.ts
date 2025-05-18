@@ -18,7 +18,7 @@ export const useUsers = () => {
       setUsers(filteredUsers);
       return filteredUsers;
     } catch (error) {
-      console.error("Erro ao buscar usuários:", error);
+      console.error("Error fetching users:", error);
       return [];
     } finally {
       setIsLoading(false);

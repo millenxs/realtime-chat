@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import React from "react";
 import { useChat } from "@/context/ChatContext";
@@ -14,7 +14,7 @@ export default function ChatHeader() {
 
   return (
     <div className="mb-4 font-bold text-lg">
-      Conversa com {recipient?.name || "Usuário"}
+      Chat with {recipient?.name || "User"}
     </div>
   );
 }
