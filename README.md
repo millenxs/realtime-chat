@@ -27,10 +27,6 @@ O sistema implementa funcionalidades essenciais como autenticação, CRUD de usu
 - **Docker + Docker Compose**: Containerização dos serviços backend, frontend, banco de dados e Redis.
 - **GitHub Actions**: Pipeline de CI/CD para automação de testes e deploy.
 
-### testes
-- **Jest**: Testes unitários para backend.
-- **Cypress**: Testes E2E para frontend.
-
 
 ## Estrutura do Projeto
 
@@ -40,16 +36,10 @@ O sistema implementa funcionalidades essenciais como autenticação, CRUD de usu
 ├── apps/
 │   ├── backend/         # API Node.js com TypeScript
 │   └── frontend/        # Next.js com Tailwind CSS
-├── packages/
-│   ├── shared/          # Tipagens, utils, validações comuns
-├── docker/
-│   └── ...
 ├── .github/
 │   └── workflows/       # CI/CD
 ├── docker-compose.yml   # Orquestra serviços (DB, Redis, etc.)
 ├── README.md
-└── docs/
-    └── arquitetura.md   # Documento com visão técnica
 ```
     
 ## Funcionalidades
@@ -115,29 +105,10 @@ No diretório apps/frontend:
 No diretório backend e frontend, crie um arquivo .env com as variáveis de ambiente necessárias (exemplo no docker-compose.yml).
 
 
-## Testes
-
-#### Backend
-Para rodar os testes unitários do backend, execute:
-
-```bash
-  npm test
-```
-
-#### Frontend 
-Para rodar os testes E2E do frontend, execute:
-```bash
-  npm run cypress
-```
-
-## Documentação da API
-
-A documentação da API está disponível via Swagger. Para acessá-la:
-
-[Documentação](http://localhost:3001/api-docs)
-
 
 ## Considerações Finais
 
-Este é um projeto de avaliação técnica que desafia suas habilidades em diversas camadas da aplicação, do frontend ao backend, com foco em boas práticas de arquitetura, segurança, performance e escalabilidade.
+Este projeto foi desenvolvido como parte de uma avaliação técnica, com o objetivo de demonstrar habilidades em múltiplas camadas da aplicação, abrangendo tanto o frontend quanto o backend, com ênfase em boas práticas de arquitetura, segurança, performance e escalabilidade.
+
+Embora ainda não esteja totalmente finalizado — restando alguns pontos importantes a serem implementados — a estrutura principal já está definida e segue o planejamento proposto. A organização atual do código permite uma fácil compreensão e oferece base suficiente para ajustes e melhorias futuras.
 
