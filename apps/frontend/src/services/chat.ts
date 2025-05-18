@@ -40,9 +40,9 @@ class ChatService {
   }
 
   // Create a new conversation
-  async createConversation(userId: string, recipientId: string): Promise<Conversation> {
+  async createConversation(recipientId: string): Promise<Conversation> {
     const response = await api.post<Conversation>("/conversations", {
-      participantIds: [userId, recipientId]
+      recipientId,
     });
     return response.data;
   }

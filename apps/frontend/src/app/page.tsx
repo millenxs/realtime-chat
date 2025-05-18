@@ -1,7 +1,6 @@
 "use client";
 import { ReactNode } from "react";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { LanguageSwitcher } from "@/components/LocaleToggle";
+
 import {
   CloudArrowUpIcon,
   LockClosedIcon,
@@ -12,21 +11,21 @@ import { LoginForm } from "@/components/auth/LoginForm";
 
 const features = [
   {
-    name: "Push to deploy.",
+    name: "Instant messaging.",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+      "Send and receive messages in real time without delays or page reloads. Perfect for support, sales, or real-time collaboration.",
     icon: CloudArrowUpIcon,
   },
   {
-    name: "SSL certificates.",
+    name: "End-to-end encryption.",
     description:
-      "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
+      "All chat data is encrypted using SSL to ensure secure communication and protect your privacy.",
     icon: LockClosedIcon,
   },
   {
-    name: "Database backups.",
+    name: "Smart history.",
     description:
-      "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
+      "Access your full conversation history anytime, with keyword search and message pinning for quick reference.",
     icon: ServerIcon,
   },
 ];
@@ -34,12 +33,6 @@ const features = [
 export default function AuthLayout() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-white py-24 sm:py-32">
-      {/* Botões fixos no canto superior direito */}
-      <div className="absolute top-4 right-4 flex space-x-2 z-50">
-        <ThemeToggle />
-        <LanguageSwitcher />
-      </div>
-
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
           <div className="lg:pt-4 lg:pr-8">
@@ -51,9 +44,9 @@ export default function AuthLayout() {
                 Realtime Chat
               </p>
               <p className="mt-6 text-lg/8 text-gray-600">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Maiores impedit perferendis suscipit eaque, iste dolor
-                cupiditate blanditiis ratione.
+                Connect instantly with our intelligent chatbot or real agents.
+                Fast, secure, and always available to help you solve problems or
+                get things done.
               </p>
               <dl className="mt-10 max-w-xl space-y-8 text-base/7 text-gray-600 lg:max-w-none">
                 {features.map((feature) => (
@@ -75,7 +68,6 @@ export default function AuthLayout() {
             <AuthCard>
               <LoginForm />
             </AuthCard>
-            
           </div>
         </div>
       </div>

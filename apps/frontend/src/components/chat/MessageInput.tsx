@@ -31,7 +31,7 @@ export default function MessageInput() {
       <Input
         ref={inputRef}
         id="message-input"
-        placeholder="Digite sua mensagem..."
+        placeholder="Type your message..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
         className="flex-1"
@@ -41,7 +41,7 @@ export default function MessageInput() {
         type="submit" 
         disabled={!input.trim() || !selectedConversation}
       >
-        Enviar
+        Send
       </Button>
     </form>
   );

@@ -11,25 +11,24 @@ export interface LoginResponse {
 
 export const registerSchema = z
   .object({
-    name: z.string().min(1, "Nome é obrigatório"),
-    email: z.string().email("Email inválido"),
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email"),
     password: z
       .string()
-      .min(8, "Senha deve ter no mínimo 8 caracteres")
-      .regex(/[A-Z]/, "Deve conter ao menos uma letra maiúscula")
-      .regex(/[0-9]/, "Deve conter ao menos um número")
-      .regex(/[^A-Za-z0-9]/, "Deve conter ao menos um caractere especial"),
-    confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
+      .min(8, "Password must be at least 8 characters long")
+      .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+      .regex(/[0-9]/, "Must contain at least one number")
+      .regex(/[^A-Za-z0-9]/, "Must contain at least one special character"),
+    confirmPassword: z.string().min(1, "Password confirmation is required"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não coincidem",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
 export const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
-  remember: z.boolean().optional(),
 });
 
 export const register = async (data: {
@@ -42,6 +41,7 @@ export const register = async (data: {
   const { confirmPassword, ...rest } = data;
   return api.post("/auth/register", rest);
 };
+
 export const login = async (data: {
   email: string;
   password: string;

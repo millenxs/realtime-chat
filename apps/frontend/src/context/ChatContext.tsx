@@ -31,7 +31,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.error("Token não encontrado");
+      console.error("Token not found");
       return;
     }
 
@@ -42,10 +42,10 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       // Connect to socket
       socketService.connect(token)
         .then(() => {
-          console.log("Socket conectado com sucesso");
+          console.log("Socket connected successfully");
         })
         .catch((error) => {
-          console.error("Falha ao conectar socket:", error);
+          console.error("Failed to connect socket:", error);
         });
 
       // Set up message handler
@@ -91,7 +91,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         socketService.disconnect();
       };
     } catch (error) {
-      console.error("Erro ao decodificar token:", error);
+      console.error("Error decoding token:", error);
       localStorage.removeItem("token");
     }
   }, []);
@@ -113,7 +113,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       const data = await chatService.getConversations();
       setConversations(data);
     } catch (error) {
-      console.error("Erro ao buscar conversas:", error);
+      console.error("Error fetching conversations:", error);
     } finally {
       setIsLoading(false);
     }
@@ -131,7 +131,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       
       setMessages(formatted);
     } catch (error) {
-      console.error("Erro ao buscar mensagens:", error);
+      console.error("Error fetching messages:", error);
     } finally {
       setIsLoading(false);
     }
@@ -144,7 +144,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       const otherParticipant = selectedConversation.participants.find(p => p.userId !== userId);
       
       if (!otherParticipant) {
-        console.error("Não foi possível encontrar o destinatário");
+        console.error("Could not find recipient");
         return;
       }
 
@@ -195,7 +195,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         )
       );
     } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
+      console.error("Error sending message:", error);
     }
   };
 
@@ -215,7 +215,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       }
       
       // Create a new conversation
-      const newConv = await chatService.createConversation(userId, recipientId);
+      const newConv = await chatService.createConversation(recipientId);
       
       // Get recipient user data
       const recipient = await chatService.getUser(recipientId);
@@ -224,7 +224,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       const newConversation = {
         ...newConv,
         participants: [
-          { userId, user: { id: userId, name: "Você" } },
+          { userId, user: { id: userId, name: "You" } },
           { userId: recipientId, user: recipient }
         ]
       };
@@ -235,7 +235,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       setSelectedConversation(newConversation);
       setMessages([]);
     } catch (error) {
-      console.error("Erro ao criar conversa:", error);
+      console.error("Error creating conversation:", error);
     } finally {
       setIsLoading(false);
     }

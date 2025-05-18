@@ -12,21 +12,21 @@ class SocketService {
         this.socket = io("http://localhost:3333", { auth: { token } });
         
         this.socket.on("connect", () => {
-          console.log("Conectado ao WebSocket");
+          console.log("Connected to WebSocket");
           resolve(this.socket!);
         });
         
         this.socket.on("connect_error", (error) => {
-          console.error("Erro de conexão com WebSocket:", error);
+          console.error("WebSocket connection error:", error);
           reject(error);
         });
         
-        // Configurando handler de mensagens
+        // Setting up message handler
         if (this.messageHandler) {
           this.socket.on("message", this.messageHandler);
         }
       } catch (error) {
-        console.error("Erro ao conectar ao WebSocket:", error);
+        console.error("Error connecting to WebSocket:", error);
         reject(error);
       }
     });
@@ -43,16 +43,16 @@ class SocketService {
     this.messageHandler = callback;
     
     if (this.socket) {
-      // Remove o handler antigo para evitar duplicação
+      // Remove old handler to avoid duplication
       this.socket.off("message");
-      // Adiciona o novo handler
+      // Add new handler
       this.socket.on("message", callback);
     }
   }
 
   sendMessage(message: Partial<Message>) {
     if (!this.socket) {
-      console.error("Socket não conectado");
+      console.error("Socket not connected");
       return false;
     }
     
@@ -65,5 +65,5 @@ class SocketService {
   }
 }
 
-// Singleton para o serviço de socket
+// Singleton for socket service
 export const socketService = new SocketService();

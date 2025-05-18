@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import "../../styles/globals.css";
 import { ReactNode } from "react";
@@ -12,7 +12,6 @@ interface AuthCardProps {
   linkText?: string;
   variant?: 'login' | 'register';
   children: ReactNode;
-  animationDirection?: "left" | "right";
   onToggle?: () => void;
 }
 
@@ -24,12 +23,8 @@ export function AuthCard({
   linkText,
   variant = 'login',
   children,
-  animationDirection = 'left',
   onToggle,
 }: AuthCardProps) {
-  const animationClass =
-    animationDirection === "left" ? "slideInFromLeft" : "slideInFromRight";
-
   const defaultConfig = variant === 'login'
     ? {
         title: 'Welcome',
@@ -53,14 +48,11 @@ export function AuthCard({
   const finalLinkHref = linkHref ?? defaultConfig.linkHref;
 
   return (
-    <div
-      style={{ animation: `${animationClass} 1s ease-out` }}
-      className="max-w-md w-full bg-gradient-to-r from-blue-800 to-purple-600 rounded-xl shadow-2xl overflow-hidden p-8 space-y-8"
-    >
-      <h2 style={{ animation: 'appear 2s ease-out' }} className="text-center text-4xl font-extrabold text-white">
+    <div className="max-w-md w-full bg-gradient-to-r from-blue-800 to-purple-600 rounded-xl shadow-2xl overflow-hidden p-8 space-y-8">
+      <h2 className="text-center text-4xl font-extrabold text-white">
         {finalTitle}
       </h2>
-      <p style={{ animation: 'appear 3s ease-out' }} className="text-center text-gray-200">
+      <p className="text-center text-gray-200">
         {finalSubtitle}
       </p>
 

@@ -17,6 +17,7 @@ export function LoginForm() {
   const router = useRouter();
   const [apiError, setApiError] = useState<string | null>(null);
 
+  // Initialize form with validation using zod
   const {
     register,
     handleSubmit,
@@ -25,17 +26,22 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
+  // Function triggered on form submit
   async function onSubmit(data: LoginFormData) {
     setApiError(null);
     try {
-      const response = await login(data);
+      const { email, password } = data;
+      const response = await login({ email, password });
+
+      // Save token in localStorage
       localStorage.setItem("token", response.data.token);
-      toast.success("Login realizado com sucesso!");
+
+      toast.success("Successfully signed in!");
       setTimeout(() => {
-        router.push("/home");
+        router.push("/home"); // Redirect to home after successful login
       }, 1500);
     } catch (error: any) {
-      const message = error.response?.data?.message || "Erro no login";
+      const message = error.response?.data?.message || "Login failed";
       setApiError(message);
       toast.error(message);
     }
@@ -58,6 +64,7 @@ export function LoginForm() {
           </p>
         )}
       </div>
+
       <div className="relative">
         <Input
           placeholder="Password"
@@ -73,17 +80,13 @@ export function LoginForm() {
           </p>
         )}
       </div>
+
+      {/* Remember me - optional feature */}
       <div className="flex items-center justify-between">
         <label
           htmlFor="remember"
           className="flex items-center text-sm text-gray-200"
         >
-          <Input
-            className="form-checkbox h-4 w-4 text-purple-600 bg-gray-800 border-gray-300 rounded"
-            type="checkbox"
-            id="remember"
-            {...register("remember")}
-          />
           <span className="ml-2">Remember me</span>
         </label>
       </div>
@@ -99,7 +102,7 @@ export function LoginForm() {
         type="submit"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Entrando..." : "Sign In"}
+        {isSubmitting ? "Signing in..." : "Sign In"}
       </Button>
     </form>
   );

@@ -10,6 +10,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - prisma-migrate
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/realtime-chat
       - REDIS_URL=redis://redis:6379
@@ -68,6 +69,17 @@ services:
       - CORS_ORIGIN=http://frontend:3000
     depends_on:
       - backend
+    networks:
+      - chatnet
+
+  prisma-migrate:
+    container_name: prisma-migrate
+    build: ./apps/backend
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/realtime-chat
+    command: npx prisma migrate deploy
     networks:
       - chatnet
 
