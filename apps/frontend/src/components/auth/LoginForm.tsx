@@ -10,12 +10,14 @@ import { toast } from "react-toastify";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { loginSchema, login } from "@/services/auth";
+import { useUser } from "@/context/UserContext";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const router = useRouter();
   const [apiError, setApiError] = useState<string | null>(null);
+  const { setName } = useUser();
 
   // Initialize form with validation using zod
   const {
@@ -32,9 +34,12 @@ export function LoginForm() {
     try {
       const { email, password } = data;
       const response = await login({ email, password });
+      
 
       // Save token in localStorage
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("name", response.data.user?.name || "");
+      setName(response.data.user.name);
 
       toast.success("Successfully signed in!");
       setTimeout(() => {

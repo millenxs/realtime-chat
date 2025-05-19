@@ -3,16 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/context/UserContext";
 
 export default function Navbar() {
+  const { name } = useUser();
   const [open, setOpen] = useState(false);
-  const [username, setUsername] = useState<string | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    const storedName = localStorage.getItem("name"); 
-    setUsername(storedName);
-  }, []);
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -29,7 +25,7 @@ export default function Navbar() {
           onClick={() => setOpen((prev) => !prev)}
           className="focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-3 py-1 hover:bg-gray-700"
         >
-          {username ? `${username} ▼` : "Perfil ▼"}
+          {name ? `${name} ▼` : "Perfil ▼"}
         </Button>
 
         {open && (
