@@ -1,11 +1,5 @@
-'use client';
-import { AuthCard } from '@/components/auth/AuthCard';
-import { RegisterForm } from '@/components/auth/RegisterForm';
+import AuthPage from '@/components/auth/AuthPage';
 
 export default function RegisterPage() {
-  return (
-      <AuthCard variant="register">
-        <RegisterForm />
-      </AuthCard>
-  );
+  return <AuthPage variant="register" />;
 }
