@@ -4,7 +4,7 @@ import React, { useRef, useEffect } from "react";
 import { useChat } from "@/context/ChatContext";
 
 export default function MessageList() {
-  const { messages, selectedConversation } = useChat();
+  const { messages, selectedConversation, userId } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Automatically scroll to the bottom whenever new messages arrive
@@ -23,7 +23,7 @@ export default function MessageList() {
 
   // Identify the recipient (the other participant in the chat)
   const recipient = selectedConversation.participants.find(
-    (p) => p.userId !== useChat().userId
+    (p) => p.userId !== userId
   )?.user;
 
   return (
